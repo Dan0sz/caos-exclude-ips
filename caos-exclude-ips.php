@@ -11,6 +11,12 @@
 
 defined('ABSPATH') || exit;
 
+add_filter(
+    'caos_exclude_ips', function () {
+        return [ '1.1.1.1' ]; 
+    }
+);
+
 /**
  * Decide whether this IP address should be tracked.
  * 
@@ -32,6 +38,8 @@ function caos_exclude_ip($exclude)
      */
     $to_exclude = apply_filters('caos_exclude_ips', []);
     $ip         = caos_get_ip();
+
+    error_log(current_time('Y-m-d H:i:s') . ": Comparing $ip to array: " . print_r($to_exclude, true) . "\n", 3, trailingslashit(WP_CONTENT_DIR) . 'caos-debug.log');
     
     return in_array($ip, $to_exclude);
 }
